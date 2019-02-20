@@ -22,6 +22,9 @@ docs_path = "file://" + os.path.abspath('docs')
 
 # For loop to build site
 for file in build_list:
-    open('docs/'+file, 'w+').write(template_top+file+template_bottom)
+#    print('content/'+ file)
+    file_content = open('content/'+ file).read()
+#    print(file_content)
+    open('docs/'+file, 'w+').write(template_top+file_content+template_bottom)
 # Optionally open in web browser
     webbrowser.open(docs_path + "/" + file)
