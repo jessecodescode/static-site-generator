@@ -1,6 +1,6 @@
 #!/bin/bash
 
-rm production/*.html
+rm docs/*.html
 
 declare -a filenames
 cd content/
@@ -16,7 +16,7 @@ for filename in ${filenames[@]}; do
     echo "  $filename"
 done
 for filename in ${filenames[@]}; do
-    cat templates/top.html content/$filename templates/bottom.html > production/$filename
+    cat templates/top.html content/$filename templates/bottom.html > docs/$filename
 done
 #sleep 1
-#open -a Firefox production/home.html
+#open -a Firefox docs/home.html
