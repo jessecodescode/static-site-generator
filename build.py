@@ -18,14 +18,8 @@ def main():
 		#print("Audit aft HTML remove: " + str(os.listdir("docs")))
 	clear_docs()
 
-	# Paths to template files
-	template_top = open('templates/top.html').read()
-	template_bottom = open('templates/bottom.html').read()
-
-
 	# Read in the entire template
 	template = open('templates/base.html').read()
-
 
 	# Paths to content
 	content_file_list = os.listdir("content")
@@ -68,17 +62,6 @@ def main():
 		return extracted
 
 	# Build the pages
-	def build_pages():
-		for file in content_file_list:
-		#    print('content/'+ file)
-			file_content = open('content/'+ file).read()
-		#    print(file_content)
-			html_content = extract_html(file_content)
-			#print(html_content)
-			open('docs/'+file, 'w+').write(template_top+html_content+template_bottom)
-	#build_pages()
-
-	# Build the pages
 	def build_pages_with_base():
 		for file in content_file_list:
 		#    print('content/'+ file)
@@ -100,7 +83,7 @@ def main():
 			docs_path = "file://" + os.path.abspath('') + "/"
 			for page in pages:
 				page_path = docs_path + page['output_file_path']
-				print(page_path)
+				#print(page_path)
 				webbrowser.open(page_path)
 	open_firefox(pages)
 if __name__ == "__main__":
