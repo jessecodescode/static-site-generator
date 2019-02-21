@@ -3,7 +3,7 @@ import os
 import webbrowser
 import readline
 
-send_output_to_browser = False #Optional. True opens in Firefox after building site.
+send_output_to_browser = True #Optional. True opens in Firefox after building site.
 
 def main():	
 	# Remove all HTML files in /docs.
@@ -21,6 +21,11 @@ def main():
 	# Paths to template files
 	template_top = open('templates/top.html').read()
 	template_bottom = open('templates/bottom.html').read()
+
+
+	# Read in the entire template
+	template = open('templates/base.html').read()
+
 
 	# Paths to content
 	content_file_list = os.listdir("content")
@@ -71,8 +76,24 @@ def main():
 			html_content = extract_html(file_content)
 			#print(html_content)
 			open('docs/'+file, 'w+').write(template_top+html_content+template_bottom)
-	build_pages()
-	
+	#build_pages()
+
+	# Build the pages
+	def build_pages_with_base():
+		for file in content_file_list:
+		#    print('content/'+ file)
+			file_content = open('content/'+ file).read()
+		#    print(file_content)
+			html_content = extract_html(file_content)
+			#print(html_content)
+			
+			#open('docs/'+file, 'w+').write(template_top+html_content+template_bottom)
+			
+			# Use the string replace
+			finished_page = template.replace("{{content}}", html_content)
+			open('docs/'+file, 'w+').write(finished_page)
+	build_pages_with_base()
+
 	# Optionally open output in web browser
 	def open_firefox(pages):
 		if send_output_to_browser == True:
