@@ -4,7 +4,6 @@ import readline
 import glob
 from jinja2 import Template
 
-
 def directoryStatus(folder, fileNames):
 	print('The current state of the', folder, 'directory is:')
 	if len(fileNames) > 1:
@@ -16,38 +15,32 @@ def deleteFileList(files):
 	for file in files:
 		os.remove(file)
 
-	# Extract HTML from input files
-def extractHTML(file):
-	# print(file)
-	extracted = ''
-	lines = file.splitlines()
-	for line in lines:
-		if not line.startswith('***'):
-			extracted = extracted + line
-	return extracted
+def getAdditionalMetaData(file, contentMetaData):
+	print('19')
+	name = file.split('/')[1]
+	print(name)
+	for item in contentMetaData:
+		if item['Filename'] == name:
+			return item
 
 # Build the pages
-def buildPages(contentMetaData, templates, inputDir, outputDir):
-	print('31')
-	print(contentMetaData)
-	print('33')
-	print(templates)
-	print('35')
-	print(inputDir)
-	print('37')
-	print(outputDir)
+def buildPages(contentMetaData, inputDir, outputDir):
+	inputFiles = glob.glob('content/*.*')
+	print('21')
+	print(inputFiles)
 
-	for item in contentMetaData:
-		# print('41')
-		# print(item['Filename'])
-		item_html = open(inputDir + '/' + item['Filename'])
-		# print(item_html)
+	for item in inputFiles:
+		additionalMetaData = getAdditionalMetaData(item, contentMetaData)
+		item_html = open(item).read()
+		# print('26')
+		# print(contentMetaData)
 
-		title = item['Title']
-		date = item['Date']
-		author = item['Author']
+		title = additionalMetaData['Title']
+		date = additionalMetaData['Date']
+		author = additionalMetaData['Author']
+		me = additionalMetaData['Filename']
 
-		template_html = open(templates).read()
+		template_html = open('templates/base.html').read()
 		template = Template(template_html)
 
 		finished_item = template.render(
@@ -55,9 +48,13 @@ def buildPages(contentMetaData, templates, inputDir, outputDir):
 			date=date,
 			author=author,
 			content=item_html,
+			me=me,
+			pages=contentMetaData,
 			)
-		
-		open(item[outputDir + '/' + item['Filename']], 'w+').write(finished_item)
+		print('54')
+		print('output')
+		output = outputDir + '/' + additionalMetaData['Filename']
+		open(output, 'w+').write(finished_item)
 		
 
 def main():
@@ -78,7 +75,6 @@ def main():
 	template = 'templates/base.html'
 
 	inputDir = 'content'
-	inputFiles = glob.glob(inputDir+'/'+'*.*')
 
 	contentMetaData = [
 		{
@@ -103,7 +99,7 @@ def main():
 ####################################################
 ### Generating the Output ###
 ####################################################
-	buildPages(contentMetaData, template, inputDir, outputDir)
+	buildPages(contentMetaData, inputDir, outputDir)
 ####################################################
 
 if __name__ == "__main__":
