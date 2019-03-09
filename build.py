@@ -1,11 +1,9 @@
 # Importing dependencies
 import os
-import webbrowser
 import readline
 import glob
+from jinja2 import Template
 
-#Optional. True opens in Firefox after building site.
-send_output_to_browser = True 
 
 def directoryStatus(folder, fileNames):
 	print('The current state of the', folder, 'directory is:')
@@ -18,28 +16,6 @@ def deleteFileList(files):
 	for file in files:
 		os.remove(file)
 
-def buildMetaData(files, inputDir, outputDir):
-	pages = []
-	for file in files:
-		# print('24', file)
-		outputFile = file.replace(inputDir + '/',outputDir + '/')
-		# print('26', outputFile)
-		content = open(file).read()
-		lines = content.splitlines()
-		count = 1
-		page = {'file': file, 'outputFile': outputFile,}
-		for line in lines:
-			if line.startswith('***'):
-				line = line.strip('*')
-				key = line.split(":", maxsplit=1)[0]
-				value = line.split(": ", maxsplit=1)[1]
-				page[key] = value
-		pages.append(page)
-		count += 1
-	if len(pages) > 1:
-		return pages
-	return 'There is no content!'
-
 	# Extract HTML from input files
 def extractHTML(file):
 	# print(file)
@@ -51,21 +27,38 @@ def extractHTML(file):
 	return extracted
 
 # Build the pages
-def buildPages(contentMetaData, templates):
-	template = open(templates[0]).read()
-	for item in contentMetaData:
-		file_content = open(item['file']).read()
-		html_content = extractHTML(file_content)
-		finished_page = template.replace("{{content}}", html_content)
-		open(item['outputFile'], 'w+').write(finished_page)
+def buildPages(contentMetaData, templates, inputDir, outputDir):
+	print('31')
+	print(contentMetaData)
+	print('33')
+	print(templates)
+	print('35')
+	print(inputDir)
+	print('37')
+	print(outputDir)
 
-# Optionally open output in web browser
-def open_firefox(contentMetaData):
-	if send_output_to_browser == True:
-		docs_path = "file://" + os.path.abspath('') + "/"
-		print(docs_path)
-		for item in contentMetaData:
-			webbrowser.open(docs_path + item['outputFile'])
+	for item in contentMetaData:
+		# print('41')
+		# print(item['Filename'])
+		item_html = open(inputDir + '/' + item['Filename'])
+		# print(item_html)
+
+		title = item['Title']
+		date = item['Date']
+		author = item['Author']
+
+		template_html = open(templates).read()
+		template = Template(template_html)
+
+		finished_item = template.render(
+			title=title,
+			date=date,
+			author=author,
+			content=item_html,
+			)
+		
+		open(item[outputDir + '/' + item['Filename']], 'w+').write(finished_item)
+		
 
 def main():
 ####################################################
@@ -73,7 +66,6 @@ def main():
 ####################################################
 	outputDir = 'docs'
 	outputFiles = glob.glob(outputDir+'/'+'*.html')
-	print('41',outputFiles)
 
 	# Print current status of /docs directory.
 	directoryStatus(outputDir, outputFiles)
@@ -83,25 +75,36 @@ def main():
 ####################################################
 ### Building the Content MetaData ###
 ####################################################
-	templateDir = 'templates'
-	templates = glob.glob(templateDir+'/'+'*.template')
+	template = 'templates/base.html'
 
 	inputDir = 'content'
 	inputFiles = glob.glob(inputDir+'/'+'*.*')
 
-	# print('43', inputFiles)
-	# print('44', templates)
-
-	contentMetaData = buildMetaData(inputFiles, inputDir, outputDir)
-	#print(contentMetaData)
+	contentMetaData = [
+		{
+			'Title': 'Homepage',
+			'Date': '2/20/2019',
+			'Author': 'jbot',
+			'Filename': 'index.html',
+		},
+		{
+			'Title': 'About',
+			'Date': '2/21/2019',
+			'Author': 'jbot',
+			'Filename': 'about.html',
+		},
+		{
+			'Title': 'Contact',
+			'Date': '2/22/2019',
+			'Author': 'jbot',
+			'Filename': 'contact.html',
+		},
+	]
 ####################################################
 ### Generating the Output ###
 ####################################################
-	buildPages(contentMetaData, templates)
+	buildPages(contentMetaData, template, inputDir, outputDir)
 ####################################################
-### Opening output with Firefox ###
-####################################################
-	open_firefox(contentMetaData)
 
 if __name__ == "__main__":
 	main()

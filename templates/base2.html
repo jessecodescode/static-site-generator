@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <Title></Title>
+    <Title>{{ page.title }}</Title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
         crossorigin="anonymous">
 
@@ -25,21 +25,19 @@
             <div class="col">
                 <nav class="navbar navbar-light bg-light">
                     <ul class="nav">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="home.html">Home</a> <!-- Dynamic active assignment -->
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="about.html">About</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="contact.html">Contact</a>
-                        </li>
+                        {% for page in pages %}
+                            <!-- if current page is active... -->
+                            <li class="nav-item">
+                                <!-- Dynamic active assignment -->
+                                <a class="nav-link" href="{{ page.output_filename }}">{{ page.title }}</a>
+                            </li>
+                        {% endfor %}
                     </ul>
                 </nav>
             </div>
         </div>
         <!-- Content here -->
-        {{content}}
+        {{ content }}
     </div>
 </body>
 
