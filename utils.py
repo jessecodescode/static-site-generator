@@ -1,4 +1,5 @@
 # Importing dependencies
+import sys
 import os
 import readline
 import glob
@@ -69,9 +70,9 @@ def main():
 
 	# Remove all HTML files in /docs directory.
 	deleteFileList(outputFiles)
-####################################################
-### Building the Content MetaData ###
-####################################################
+######################################################
+### Additonal Content MetaData & Build Preparation ###
+######################################################
 	template = 'templates/base.html'
 
 	inputDir = 'content'
@@ -102,5 +103,15 @@ def main():
 	buildPages(contentMetaData, inputDir, outputDir)
 ####################################################
 
-if __name__ == "__main__":
-	main()
+
+def main():
+	command = sys.argv
+	try:
+		if command[1] == 'build':
+			print('building')
+		elif command[1] == 'new':
+			print('new build')
+		else:
+			print('New or Build - nothing else.')
+	except:
+		print('No argument specified. Choose \'new\' or \'build.\'')
