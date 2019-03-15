@@ -1,4 +1,3 @@
-# Importing dependencies
 import sys
 import os
 import readline
@@ -6,16 +5,20 @@ import glob
 import json
 from jinja2 import Template
 
+# Prints the contents of a directory .
 def directoryStatus(folder, fileNames):
-	print('The current state of the', folder, 'directory is:')
+	print('\nThe current state of the \'' + folder + '\' directory is:\n')
 	if len(fileNames) > 1:
-		print(fileNames)
+		for filename in fileNames:
+			print('    ', filename)
 	else:
-		print('The', folder, 'directory is empty! :)')
+		print('The \'' + folder + '\' directory is empty! :)\n')
+	print('\n')
 
 def deleteFileList(files):
 	for file in files:
 		os.remove(file)
+	print('\nHTML files in output directory have been removed.\nNow I will start building...')
 
 def getAdditionalMetaData(file, contentMetaData):
 	name = file.split('/')[1]
@@ -34,14 +37,13 @@ def readJsonData():
 # Build the pages
 def buildPages(contentMetaData, inputDir, outputDir):
 	inputFiles = glob.glob('content/*.*')
-	print('37', inputFiles)
-
+	directoryStatus(inputDir, inputFiles)
 	for item in inputFiles:
 		additionalMetaData = getAdditionalMetaData(item, contentMetaData)
 		item_html = open(item).read()
 		if additionalMetaData is not None:
-			print('42',additionalMetaData)
-			print('43', len(additionalMetaData))
+			# print('42',additionalMetaData)
+			# print('43', len(additionalMetaData))
 			title = additionalMetaData['Title']
 			date = additionalMetaData['Date']
 			author = additionalMetaData['Author']
@@ -62,17 +64,16 @@ def buildPages(contentMetaData, inputDir, outputDir):
 			# print('output')
 			output = outputDir + '/' + additionalMetaData['Filename']
 			open(output, 'w+').write(finished_item)
-	print('built all the pages!')
 
 def buildSite():
+	# print('running buildSite function')
 ### Cleansing the output directory ###
-	print('running buildSite function')
 	outputDir = 'docs'
 	outputFiles = glob.glob(outputDir+'/'+'*.html')
 	# print('73')
 	# print(outputFiles)
 	# Print current status of /docs directory.
-	directoryStatus(outputDir, outputFiles)
+	# directoryStatus(outputDir, outputFiles)
 
 	# Remove all HTML files in /docs directory.
 	deleteFileList(outputFiles)
@@ -95,7 +96,7 @@ def nameNewPage():
 		return 'new_content_page.html'
 
 def newPage():
-	print('running newPage function')
+	# print('running newPage function')
 	newPageName = nameNewPage()
 	placeHolderContent = '''
 		<h1>New Content!</h1>
@@ -122,19 +123,22 @@ def newPage():
 	buildSite()
 
 def main():
+	# print('running main function')
 	command = sys.argv
-	print('running main function')
 	try:
 		# print(command)
 		# print('Recieved the following argument: ' + command[1])
 		if command[1] == 'build':
 			buildSite()
-			print('I built the site!')
-			# return True
+			print('Building the site has completed.\n')
+			outputDir = 'docs'
+			outputFiles = glob.glob(outputDir+'/'+'*.html')
+			directoryStatus(outputDir, outputFiles)
+			print('Visit the new homepage at:')
+			print('file://' + os.path.abspath('') + '/docs/index.html')
 		elif command[1] == 'new':
 			newPage()
 			print('I added a new page to the site!')
-			# return True
 		else:
 			print('''
 Recieved the following argument: \'''' + command[1] + '''\'
