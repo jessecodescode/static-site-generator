@@ -85,6 +85,14 @@ def buildSite():
 ### Generating the Output ###
 	buildPages(contentMetaData, inputDir, outputDir)
 
+def nameNewPage():
+	if os.path.exists('content/new_content_page.html'):
+		i = 0
+		while os.path.exists('content/new_content_page%s.html' % i):
+			i += 1
+		return 'new_content_page%s.html' % i
+	else:
+		return 'new_content_page.html'
 def newPage():
 	print('running newPage function')
 	placeHolderContent = '''
@@ -97,7 +105,8 @@ def newPage():
 			'Author': 'Author Name',
 			'Filename': 'new_content_page.html',
 		}
-	open('content/new_content_page.html', 'w+').write(placeHolderContent)
+	newPageName = nameNewPage()
+	open('content/'+ newPageName, 'w+').write(placeHolderContent)
 	metaCurrent = open('contentMetaData.json', 'r').read()
 	jsonData = json.loads(metaCurrent)
 	# print('100')
