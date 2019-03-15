@@ -1,7 +1,1 @@
-{
-    "pages": [
-      {"Title": "Home", "Date": "3/11/2019", "Author": "jbot", "Filename": "index.html"},
-      {"Title": "About", "Date": "3/12/2019", "Author": "jbot", "Filename": "about.html"},
-      {"Title": "Content", "Date": "3/13/2019", "Author": "jbot", "Filename": "contact.html"}
-    ]
-}
+{"pages": [{"Title": "Home", "Date": "3/11/2019", "Author": "jbot", "Filename": "index.html"}, {"Title": "About", "Date": "3/12/2019", "Author": "jbot", "Filename": "about.html"}, {"Title": "Content", "Date": "3/13/2019", "Author": "jbot", "Filename": "contact.html"}, {"Title": "Placeholder Title", "Date": "Today's Date", "Author": "Author Name", "Filename": "new_content_page.html"}, {"Title": "Placeholder Title", "Date": "Today's Date", "Author": "Author Name", "Filename": "new_content_page0.html"}]}

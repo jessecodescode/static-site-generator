@@ -93,8 +93,10 @@ def nameNewPage():
 		return 'new_content_page%s.html' % i
 	else:
 		return 'new_content_page.html'
+
 def newPage():
 	print('running newPage function')
+	newPageName = nameNewPage()
 	placeHolderContent = '''
 		<h1>New Content!</h1>
     	<p>New content...</p>
@@ -103,18 +105,20 @@ def newPage():
 			'Title': 'Placeholder Title',
 			'Date': 'Today\'s Date',
 			'Author': 'Author Name',
-			'Filename': 'new_content_page.html',
+			'Filename': newPageName,
 		}
-	newPageName = nameNewPage()
 	open('content/'+ newPageName, 'w+').write(placeHolderContent)
 	metaCurrent = open('contentMetaData.json', 'r').read()
 	jsonData = json.loads(metaCurrent)
 	# print('100')
-	# print(jsonData)
-	jsonData.append(placeHolderMetaData)
+	print('114', jsonData)
+	jsonData['pages'].append(placeHolderMetaData)
 	# print('103')
-	# print(jsonData)
-	open('contentMetaData.json', 'w+').write(jsonData)
+	print('117', jsonData)
+	print(type(jsonData))
+	# open('contentMetaData.json', 'w+').write(jsonData)
+	with open('contentMetaData.json', 'w') as outfile:
+		json.dump(jsonData, outfile)
 	buildSite()
 
 def main():
